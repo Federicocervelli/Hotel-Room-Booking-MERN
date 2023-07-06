@@ -5,6 +5,7 @@ const app = express();
 const dbconfig = require('./db.js');
 const roomsRoute = require('./routes/roomsRoute');
 
+app.use(express.json());
 app.use('/api/rooms', roomsRoute);
 
 const port = process.env.PORT || 5000;
