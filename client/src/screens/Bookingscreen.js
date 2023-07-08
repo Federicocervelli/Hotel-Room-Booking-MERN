@@ -16,7 +16,7 @@ function Bookingscreen() {
       try {
         setLoading(true);
         const data = (
-          await axios.post("/api/rooms/getroombyi", { roomid: roomid })
+          await axios.post("/api/rooms/getroombyid", { roomid: roomid })
         ).data;
         setRoom(data);
         setLoading(false);
