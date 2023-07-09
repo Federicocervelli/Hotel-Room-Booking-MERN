@@ -1,15 +1,21 @@
-import React, {useState , useEffect} from 'react'
+import React, {useState} from 'react'
+import axios from 'axios'
 
 function Loginscreen() {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    function login(){
-        const user = {
-            email,
-            password
-        }
-        console.log(user)
+    async function login() {
+      const user = {
+        email,
+        password,
+      };
+      try {
+        const result = (await axios.post("/api/users/login", user)).data;
+        console.log(result);
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     return (
