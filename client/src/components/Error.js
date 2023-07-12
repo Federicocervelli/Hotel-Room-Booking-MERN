@@ -1,10 +1,10 @@
 import React from "react";
 
-function Error() {
+function Error({message}) {
   return (
     <div>
       <div class="alert alert-danger" role="alert" style={{marginTop:'50px'}}>
-        Qualcosa è andato storto, riprova...
+        {message}
       </div>
     </div>
   );

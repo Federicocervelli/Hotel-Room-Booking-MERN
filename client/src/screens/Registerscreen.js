@@ -1,11 +1,19 @@
 import React, {useState} from 'react'
 import axios from 'axios'
+import Loader from "../components/Loader";
+import Error from "../components/Error";
+import Success from '../components/Success';
+
 
 function Registerscreen() {
     const [nome, setName] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [cpassword, setCpassword] = useState('')
+
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState();
+    const [success, setSuccess] = useState();
 
     async function register() {
       if (password !== cpassword) {
@@ -18,18 +26,31 @@ function Registerscreen() {
           cpassword,
         };
         try {
+          setLoading(true);
           const result = (await axios.post("/api/users/register", user)).data;
-          console.log(result);
+          setLoading(false);
+          setSuccess(true);
+
+          setName("");
+          setEmail("");
+          setPassword("");
+          setCpassword("");
         } catch (error) {
           console.log(error);
+          setLoading(false);
+          setError(true);
         }
       }
     }
     
   return (
     <div>
+        {loading && (<Loader/>)}
+        {error && (<Error message='Qualcosa è andato storto'/>)}
+        
         <div className="row justify-content-center mt-5">
             <div className="col-md-5">
+            {success && (<Success message='Registrazione avvenuta con successo'/>)}
                 <div className='bs'>
                     <h1>
                         Registrati

@@ -10,8 +10,8 @@ import Loginscreen from './screens/Loginscreen';
 function App() {
   return (
     <div className="App">
-      <Navbar />
       <BrowserRouter>
+      <Navbar />
         <Routes>
           <Route path="/" exact Component={Homescreen}/>
           <Route path='/home' exact Component={Homescreen}/>
