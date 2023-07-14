@@ -15,6 +15,7 @@ function Bookingscreen() {
   let formattedToDate = moment(toDate, 'DD-MM-YYYY').format('DD-MM-YYYY');
 
   const totalDays = moment(formattedToDate, 'DD-MM-YYYY').diff(moment(formattedFromDate, 'DD-MM-YYYY'), 'days') + 1;
+  const [totalAmount, setTotalAmount] = useState();
   
   useEffect(() => {
     async function fetchdata() {
@@ -23,6 +24,7 @@ function Bookingscreen() {
         const data = (
           await axios.post("/api/rooms/getroombyid", { roomid: roomid })
         ).data;
+        setTotalAmount(data.costo * totalDays);
         setRoom(data);
         setLoading(false);
       } catch (error) {
@@ -32,6 +34,29 @@ function Bookingscreen() {
     }
     fetchdata();
   }, []);
+
+  async function bookRoom() {
+    const bookingDetails = {
+      room,
+      userid: JSON.parse(localStorage.getItem("currentUser"))._id,
+      fromdate: fromDate,
+      todate: toDate,
+      totalamount: totalAmount,
+      totaldays: totalDays,
+
+    };
+    console.log("bookingDetails");
+    console.log(bookingDetails);
+
+    try {
+      const data = await axios.post("/api/bookings/bookroom", bookingDetails);
+      alert("room booked successfully");
+      window.location.href = "/bookings";
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div>
       {loading ? (
@@ -49,7 +74,7 @@ function Bookingscreen() {
                 <h1>Dettagli prenotazione</h1>
                 <hr />
                 <b>
-                  <p>Nome: </p>
+                  <p>Nome: {JSON.parse(localStorage.getItem('currentUser')).nome}</p>
                   <p>Da: {fromDate}</p>
                   <p>A: {toDate}</p>
                   <p>Capienza: {room.capienza}</p>
@@ -61,11 +86,11 @@ function Bookingscreen() {
                 <b>
                   <p>Giorni totali: {totalDays} </p>
                   <p>Affitto giornaliero: {room.costo}</p>
-                  <p>Totale: {}</p>
+                  <p>Totale: {totalAmount}</p>
                 </b>
               </div>
               <div style={{ float: "right" }}>
-                <button className="btn btn-primary">Paga ora</button>
+                <button className="btn btn-primary" onClick={bookRoom}>Paga ora</button>
               </div>
             </div>
           </div>
