@@ -3,6 +3,7 @@ import axios from 'axios'
 import Loader from "../components/Loader";
 import Error from "../components/Error";
 import Success from '../components/Success';
+import { Navigate } from 'react-router-dom';
 
 
 function Registerscreen() {
@@ -35,6 +36,8 @@ function Registerscreen() {
           setEmail("");
           setPassword("");
           setCpassword("");
+
+          window.location.href = "/login";
         } catch (error) {
           console.log(error);
           setLoading(false);

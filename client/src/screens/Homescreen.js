@@ -19,6 +19,9 @@ function Homescreen() {
   const [toDate, setToDate] = useState()
   const [duplicateRooms, setDuplicateRooms] = useState([])
 
+  const [searchKey, setSearchKey] = useState('')
+  const [type, setType] = useState('Tutte')
+
   useEffect(() => {
     async function fetchData() {
       try {
@@ -87,28 +90,51 @@ function Homescreen() {
      setRooms(tempRooms);
    }
   
+  function filterBySearch(){
+      const tempRooms = duplicateRooms.filter(room => room.nome.toLowerCase().includes(searchKey.toLowerCase()))
+      setRooms(tempRooms)
+  }
+
+  function filterByType(e){
+    setType(e)
+    if(e !== 'Tutte'){
+      const tempRooms = duplicateRooms.filter(room => room.tipo.toLowerCase() === e.toLowerCase())
+      setRooms(tempRooms)
+    }else{
+      setRooms(duplicateRooms)
+    }
+  }
 
   return (
     <div className="container">
-
-
-      <div className="row mt-5">
+      <div className="row mt-5 bs">
         <div className="col-md-5">
           <RangePicker format='DD-MM-YYYY' onChange={filterByDate} />
+        </div>
+
+        <div className="col-md-5">
+          <input type="text" className="form-control" placeholder="search rooms"
+            value = {searchKey} onChange={(e) => {setSearchKey(e.target.value)}} onKeyUp={filterBySearch}
+          />
+        </div>
+        <div className="col-md-2">
+          <select className="form-control" value={type} onChange={(e) => {filterByType(e.target.value)}}>
+            <option value='Tutte'>Tutte</option>
+            <option value='Lusso'>Lusso</option>
+            <option value='Economico'>Economico</option>
+          </select>
         </div>
       </div>
 
       <div className="row justify-content-center mt-5">
         {loading ? (
           <Loader />
-        ) : rooms.length > 1 ? (
+        ) : (
           rooms.map((room) => {
-            return <div className="col-md-9 mt-3">
+            return <div className="col-md-9 mt-3"> 
               <Room room={room} fromDate={fromDate} toDate={toDate} />
             </div>
           })
-        ) : (
-          <Error />
         )}
       </div>
     </div>

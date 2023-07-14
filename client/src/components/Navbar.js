@@ -11,7 +11,7 @@ function Navbar() {
     <div>
       <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid w-50">
-          <a class="navbar-brand">
+          <a class="navbar-brand" href="/">
             Hotel Marittima
           </a>
 
@@ -28,11 +28,11 @@ function Navbar() {
           </button>
 
           <div class="collapse navbar-collapse justify-content-center" id="navbarButtonsExample">
-            <ul class="navbar-nav me-auto">
+            {/*<ul class="navbar-nav me-auto">
               <li class="nav-item ms-auto">
-                <a class="nav-link" href="/">Dashboard</a>
+                <a class="nav-link" href="/bookings">Prenotazioni</a>
               </li>
-            </ul>
+            </ul>*/}
 
             <div class="d-flex align-items-center">
               {user ? (
@@ -48,7 +48,7 @@ function Navbar() {
                     <i class="fa fa-user me-2"></i> {user.nome}
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <li><a class="dropdown-item" href="#">Prenotazioni</a></li>
+                      <li><a class="dropdown-item" href="/bookings">Prenotazioni</a></li>
                       <li><a class="dropdown-item" onClick={logout}>Log Out</a></li>
                     </ul>
                   </div>
