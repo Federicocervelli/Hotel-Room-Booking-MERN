@@ -48,7 +48,7 @@ function Navbar() {
                     <i class="fa fa-user me-2"></i> {user.nome}
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                      <li><a class="dropdown-item" href="/bookings">Prenotazioni</a></li>
+                      <li><a class="dropdown-item" href="/profile">Profilo</a></li>
                       <li><a class="dropdown-item" onClick={logout}>Log Out</a></li>
                     </ul>
                   </div>
