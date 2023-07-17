@@ -1,9 +1,10 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 
-const Room = require('../models/room');
+import Room from '../models/room.js';
+import { verifyAdmin } from '../utils/verifyToken.js';
 
-router.get('/getallrooms', async (req, res) => {
+router.get('/getallrooms', async (req, res, next) => {
     try {
         const rooms = await Room.find({});
         //return res.status(200).json(rooms);
@@ -39,4 +40,4 @@ router.post('/addroom', async (req, res) => {
 });
 
 
-module.exports = router;
+export default router;

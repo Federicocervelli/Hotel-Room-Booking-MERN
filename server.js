@@ -1,12 +1,19 @@
-const express = require('express');
+import express from 'express';
+
+
+
+import dbconfig from './db.js';
+import roomsRoute from './routes/roomsRoute.js';
+import usersRoute from './routes/usersRoute.js';
+import bookingsRoute from './routes/bookingsRoute.js';
+import cookieParser from 'cookie-parser';
+
+import dotenv from 'dotenv';
+dotenv.config();
 
 const app = express();
 
-const dbconfig = require('./db.js');
-const roomsRoute = require('./routes/roomsRoute');
-const usersRoute = require('./routes/usersRoute');
-const bookingsRoute = require('./routes/bookingsRoute');
-
+app.use(cookieParser());
 app.use(express.json());
 app.use('/api/rooms', roomsRoute);
 app.use('/api/users', usersRoute);

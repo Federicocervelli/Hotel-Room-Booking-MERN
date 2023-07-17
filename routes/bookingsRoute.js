@@ -1,10 +1,11 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const Booking = require('../models/booking');
-const Room = require('../models/room');
-const moment = require('moment');
+import Booking from '../models/booking.js';
+import Room from '../models/room.js';
+import moment from 'moment';
+import { verifyAdmin, verifyToken } from '../utils/verifyToken.js';
 
-router.post('/bookroom', async (req, res) => {
+router.post('/bookroom', verifyToken, async (req, res) => {
     const { room, userid, fromdate, todate, totalamount, totaldays } = req.body;
 
     try {
@@ -38,7 +39,7 @@ router.post('/bookroom', async (req, res) => {
     }
 });
 
-router.post('/getbookingsbyuserid', async (req, res) => {
+router.post('/getbookingsbyuserid', verifyToken, async (req, res) => {
     const userid = req.body.userid;
     try {
         const bookings = await Booking.find({ userid : userid })
@@ -48,7 +49,7 @@ router.post('/getbookingsbyuserid', async (req, res) => {
     }
 });
 
-router.post('/cancelbooking', async (req, res) => {
+router.post('/cancelbooking', verifyToken, async (req, res) => {
     const { bookingid, roomid } = req.body;
     try {
         const bookingitem = await Booking.findOne({ _id: bookingid });
@@ -67,7 +68,7 @@ router.post('/cancelbooking', async (req, res) => {
     }
 });
 
-router.get('/getallbookings', async (req, res) => {
+router.get('/getallbookings', verifyAdmin, async (req, res) => {
     try {
         const bookings = await Booking.find({});
         res.send(bookings);
@@ -78,4 +79,4 @@ router.get('/getallbookings', async (req, res) => {
 
 
 
-module.exports = router;
+export default router;
