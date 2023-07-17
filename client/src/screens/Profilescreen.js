@@ -4,6 +4,8 @@ import axios from 'axios';
 import { set } from 'mongoose';
 import Loader from '../components/Loader';
 import Error from '../components/Error';
+import Swal from 'sweetalert2';
+import { Tag, Divider } from 'antd';
 
 const onChange = (key) => {
     console.log(key);
@@ -24,8 +26,6 @@ const items = [
 
 function Profilescreen() {
 
-
-
     const user = JSON.parse(localStorage.getItem('currentUser'))
 
     useEffect(() => {
@@ -41,6 +41,9 @@ function Profilescreen() {
         </div>
     )
 }
+
+
+
 
 export default Profilescreen
 
@@ -68,6 +71,21 @@ export function MyBookings() {
         fetchBookings()
     }, [])
 
+    async function cancelBooking(bookingid, roomid) {
+        try {
+            setloading(true)
+            const result = await axios.post('/api/bookings/cancelbooking', { bookingid, roomid }).data
+            setloading(false)
+            Swal.fire('Congratulazioni', 'Prenotazione annullata con successo', 'success').then(result => {
+                window.location.reload()
+            })
+        } catch (error) {
+            console.log(error)
+            setloading(false)
+            Swal.fire('Oops...', 'Qualcosa è andato storto!', 'error')
+        }
+    }
+
     return (
         <div>
             <div className="row ">
@@ -75,16 +93,18 @@ export function MyBookings() {
                     {loading && (<Loader />)}
                     {bookings && bookings.map(booking => {
                         return (
-                        <div className="bs">
+                            <div className="bs">
                                 <h2>{booking.room}</h2>
                                 <p><b>Check In:</b> {booking.fromdate}</p>
                                 <p><b>Check Out</b>: {booking.todate}</p>
-                                <p><b>Stato</b>: {booking.status == 'booked' ? 'Confermato' : 'Annullato'}</p>
+                                <p><b>Stato</b>: {booking.status == 'booked' ? (<Tag color='green'>Prenotato</Tag>) : (<Tag color='red'>Annullato</Tag>)}</p>
                                 <p><b>Prezzo totale</b>: {booking.totalamount}</p>
-                                <div className='text-end'>
-                                    <button className="btn btn-primary">Annulla</button>
-                                </div>
-                        </div>
+                                {booking.status !== "cancelled" && 
+                                    <div className='text-end'>
+                                        <button className="btn btn-primary" onClick={() => { cancelBooking(booking._id, booking.roomid) }}>Annulla</button>
+                                    </div>
+                                }
+                            </div>
                         )
 
                     })}
@@ -107,3 +127,4 @@ export function MyProfile() {
         </div>
     )
 }
+

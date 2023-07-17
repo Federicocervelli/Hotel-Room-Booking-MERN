@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 import Error from "../components/Error";
 import moment from 'moment'
+import Swal from "sweetalert2";
 
 function Bookingscreen() {
   const [room, setRoom] = useState();
@@ -18,6 +19,9 @@ function Bookingscreen() {
   const [totalAmount, setTotalAmount] = useState();
   
   useEffect(() => {
+    if (!localStorage.getItem("currentUser")) {
+      window.location.href = "/login";
+    }
     async function fetchdata() {
       try {
         setLoading(true);
@@ -50,10 +54,17 @@ function Bookingscreen() {
 
     try {
       const data = await axios.post("/api/bookings/bookroom", bookingDetails);
-      alert("room booked successfully");
-      window.location.href = "/bookings";
+      Swal.fire("Congratulazioni", "Prenotazione effettuata con successo", "success").then(result => {
+        window.location.href = '/profile'
+      })
+
+      
     } catch (error) {
       console.log(error);
+      Swal.fire("Oops", "Qualcosa è andato storto", "error").then(result => {
+        window.location.href = '/'
+      }
+      )
     }
   }
 

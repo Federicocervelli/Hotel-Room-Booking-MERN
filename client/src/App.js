@@ -5,6 +5,7 @@ import {BrowserRouter, Router, Redirect, Route, Link, Routes, Switch} from 'reac
 import Homescreen from './screens/Homescreen';
 import Bookingscreen from './screens/Bookingscreen';
 import Registerscreen from './screens/Registerscreen';
+import Landingscreen from './screens/Landingscreen';
 import Loginscreen from './screens/Loginscreen';
 import Adminscreen from './screens/Adminscreen';
 import Profilescreen from './screens/Profilescreen';
@@ -15,7 +16,7 @@ function App() {
       <BrowserRouter>
       <Navbar />
         <Routes>
-          <Route path="/" exact Component={Homescreen}/>
+          <Route path="/" exact Component={Landingscreen}/>
           <Route path='/home' exact Component={Homescreen}/>
           <Route path='/book/:roomid/:fromDate/:toDate' exact Component={Bookingscreen}/>
           <Route path='/register' exact Component={Registerscreen}/>
