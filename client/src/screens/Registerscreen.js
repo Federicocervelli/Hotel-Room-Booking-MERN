@@ -60,8 +60,8 @@ function Registerscreen() {
                     </h1>
                     <input type="text" placeholder="name" className="form-control" value={nome} onChange={(e)=>{setName(e.target.value)}}/>
                     <input type="text" placeholder="email" className="form-control" value={email} onChange={(e)=>{setEmail(e.target.value)}}/>
-                    <input type="text" placeholder="password" className="form-control" value={password} onChange={(e)=>{setPassword(e.target.value)}}/>
-                    <input type="text" placeholder="confirm password" className="form-control" value={cpassword} onChange={(e)=>{setCpassword(e.target.value)}}/>
+                    <input type="password" placeholder="password" className="form-control" value={password} onChange={(e)=>{setPassword(e.target.value)}}/>
+                    <input type="password" placeholder="confirm password" className="form-control" value={cpassword} onChange={(e)=>{setCpassword(e.target.value)}}/>
                     <button className="btn mt-3" onClick={register}>Registrati</button>
                 </div>
             </div>    

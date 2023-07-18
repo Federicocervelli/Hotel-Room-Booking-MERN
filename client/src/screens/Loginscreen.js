@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import axios from 'axios'
 import Loader from "../components/Loader";
 import Error from "../components/Error";
+import { Link } from 'react-router-dom';
 
 function Loginscreen() {
     const [email, setEmail] = useState('')
@@ -37,9 +38,17 @@ function Loginscreen() {
                     <h1>
                         Autenticati
                     </h1>
-                    <input type="text" placeholder="email" className="form-control" value={email} onChange={(e)=>{setEmail(e.target.value)}}/>
-                    <input type="text" placeholder="password" className="form-control" value={password} onChange={(e)=>{setPassword(e.target.value)}}/>
-                    <button className="btn mt-3" onClick={login}>Login</button>
+                    <input type="text" placeholder="email" className="form-control mb-2" value={email} onChange={(e)=>{setEmail(e.target.value)}}/>
+                    <input type="password" placeholder="password" className="form-control mb-2" value={password} onChange={(e)=>{setPassword(e.target.value)}}/>
+                    <div className="row">
+                        <div className="col">
+                          <button className="btn" onClick={login}>Login</button>
+                        </div>
+                        <div className="col">
+                          <Link to="/register" className="btn-link mt-2 float-end">Registrati</Link>
+                        </div>
+                    </div> 
+                  
                 </div>
             </div>    
         </div>

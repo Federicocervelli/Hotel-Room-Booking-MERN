@@ -1,18 +1,41 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
 
 function Navbar() {
   const user = JSON.parse(localStorage.getItem("currentUser"));
+
+  function deleteCookie(name) {
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+  }
+
+  const handleDeleteCookie = () => {
+    deleteCookie('token');
+  };
+
   function logout() {
     localStorage.removeItem("currentUser");
+    //remove cookie named token
+    handleDeleteCookie();
     window.location.href = "/login";
   }
+  const location = useLocation();
+
+  if (location.pathname === '/') {
+    return null; // Hide the Navbar on the "/" path
+  }
+
   return (
     <div>
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid w-50">
-          <a class="navbar-brand" href="/">
-            Hotel Marittima
+      <nav class="navbar navbar-expand-md navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand mt-2 mt-lg-0" href="/">
+            <img
+              src="https://i.ibb.co/SBnVMJh/it-default-23-1.png"
+              height="50"
+              alt="Hotel Marittima"
+              loading="lazy"
+            />
           </a>
 
           <button
@@ -45,15 +68,17 @@ function Navbar() {
                       data-mdb-toggle="dropdown"
                       aria-expanded="false"
                     >
-                    <i class="fa fa-user me-2"></i> {user.nome}
+                      <i class="fa fa-user me-2"></i> {user.nome}
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                       <li><a class="dropdown-item" href="/profile">Profilo</a></li>
-                      <li><a class="dropdown-item" onClick={logout}>Log Out</a></li>
+                      {user.isAdmin ? (<li><a class="dropdown-item" href="/admin">Pannello Admin</a></li>):(null)}
+                      <li><a class="dropdown-item" onClick={logout} href="">Log Out</a></li>
+
                     </ul>
                   </div>
                 </>
-                ) : (
+              ) : (
                 <>
                   <Link to="/login" class="btn btn-link px-3 me-2">
                     Login

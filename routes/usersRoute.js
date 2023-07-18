@@ -121,4 +121,15 @@ Router.get("/checkauthentication", verifyToken, (req, res, next)=>{
     res.send(req.user);
 })
 
+//make admin
+Router.put("/makeadmin", verifyAdmin, async(req, res, next)=>{
+    const id = req.body.id;
+    try {
+        await User.findByIdAndUpdate(id, {isAdmin: true})
+        res.send('User updated successfully');
+    } catch (error) {
+        return res.status(400).json({error});
+    }
+})
+
 export default Router;

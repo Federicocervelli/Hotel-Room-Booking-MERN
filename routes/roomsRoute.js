@@ -27,7 +27,7 @@ router.post('/getroombyid', async (req, res) => {
     }
 });
 
-router.post('/addroom', async (req, res) => {
+router.post('/addroom', verifyAdmin, async (req, res) => {
     try{
         const newroom = new Room(req.body);
         await newroom.save();
@@ -37,6 +37,28 @@ router.post('/addroom', async (req, res) => {
         return res.status(400).json({ message: error.message });
     }
     
+});
+
+router.delete('/deleteroom/:id', verifyAdmin, async (req, res) => {
+    try{
+        const roomid = req.params.id;
+        await Room.deleteOne({_id : roomid});
+
+        res.send('Room deleted successfully');
+    }
+    catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
+});
+
+router.put('/updateroom/:id', verifyAdmin, async (req, res) => {
+    try{
+        const updatedRoom = await Room.findByIdAndUpdate(req.params.id, req.body, {new:true});
+        res.send(updatedRoom);
+    }
+    catch (error) {
+        return res.status(400).json({ message: error.message });
+    }
 });
 
 

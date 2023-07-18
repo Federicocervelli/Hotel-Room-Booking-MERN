@@ -2,9 +2,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Room from "../components/Room";
 import Loader from "../components/Loader";
-//import 'antd/dist/antd.less';
 import Error from "../components/Error";
-import { DatePicker, Space } from 'antd';
+import { Button, DatePicker, Space } from 'antd';
 import moment from 'moment'
 
 
@@ -40,98 +39,105 @@ function Homescreen() {
     fetchData();
   }, []);
 
-  function filterByDate(dates) {
-     //from date
-     console.log(dates[0].format("DD-MM-YYYY"));
-     setFromDate(dates[0].format("DD-MM-YYYY"));
-     //to date
-     console.log(dates[1].format("DD-MM-YYYY"));
-     setToDate(dates[1].format("DD-MM-YYYY"));
-   
-     //tempRooms
-     var tempRooms = [];
-   
-     for (const room of duplicateRooms) {
-       var availability = false;
-   
-       if (room.prenotazioni_attuali.length > 0) {
-         for ( const booking of room.prenotazioni_attuali) {
-           //check between or equal to dates
-           if (
-             !moment(dates[0].format("DD-MM-YYYY")).isBetween(
-               booking.fromdate,
-               booking.todate
-             ) &&
-             !moment(dates[1].format("DD-MM-YYYY")).isBetween(
-               booking.fromdate,
-               booking.todate
-             )
-           ) {
-             
-             if (
-               dates[0].format("DD-MM-YYYY") !== booking.fromdate &&
-               dates[0].format("DD-MM-YYYY") !== booking.todate &&
-               dates[1].format("DD-MM-YYYY") !== booking.fromdate &&
-               dates[1].format("DD-MM-YYYY") !== booking.todate
-             ) {
-               availability = true;
-             }
-           }
-         }
-       } else {
-         availability = true;
-       }
-   
-       if (availability === true) {
-         tempRooms.push(room);
-       }
-     }
-   
-     setRooms(tempRooms);
-   }
-  
-  function filterBySearch(){
-      const tempRooms = duplicateRooms.filter(room => room.nome.toLowerCase().includes(searchKey.toLowerCase()))
-      setRooms(tempRooms)
+
+  function filterUnified() {
+    //first filter by search
+    var tempRooms = duplicateRooms.filter(room => room.nome.toLowerCase().includes(searchKey.toLowerCase()))
+
+    // Then filter by type
+    if (type !== 'Tutte') {
+      var tempRoomsByType = tempRooms.filter(room =>
+        room.tipo.toLowerCase() === type.toLowerCase()
+      );
+      tempRooms = tempRoomsByType;
+    }
+
+    // Then filter by date
+    const tempRoomsByDate = tempRooms.filter(room => {
+      if (room.prenotazioni_attuali.length === 0) {
+        return true; // Room is available if no bookings
+      }
+
+      for (const booking of room.prenotazioni_attuali) {
+        const bookingFromDate = moment(booking.fromdate, "DD-MM-YYYY");
+        const bookingToDate = moment(booking.todate, "DD-MM-YYYY");
+        const fromDateMoment = moment(fromDate, "DD-MM-YYYY");
+        const toDateMoment = moment(toDate, "DD-MM-YYYY");
+
+
+        //console.log(`${room.nome}: Booking from ${bookingFromDate} to ${bookingToDate}`);
+        //console.log(`${room.nome}: Selected from ${fromDateMoment} to ${toDateMoment}`);
+
+        const isOverlapping =
+          bookingFromDate.isBetween(fromDateMoment, toDateMoment) ||
+          bookingToDate.isBetween(fromDateMoment, toDateMoment) ||
+          fromDateMoment.isBetween(bookingFromDate, bookingToDate) ||
+          toDateMoment.isBetween(bookingFromDate, bookingToDate) ||
+          fromDateMoment.isSame(bookingFromDate) ||
+          toDateMoment.isSame(bookingToDate) ||
+          fromDateMoment.isSame(bookingToDate) ||
+          toDateMoment.isSame(bookingFromDate);
+
+        if (isOverlapping) {
+          //console.log(`Room ${room} is booked during the selected dates`);
+          return false; // Room is booked during the selected dates
+        }
+      }
+
+      return true; // Room is available for the selected dates
+    });
+
+    setRooms(tempRoomsByDate);
+
+
   }
 
-  function filterByType(e){
-    setType(e)
-    if(e !== 'Tutte'){
-      const tempRooms = duplicateRooms.filter(room => room.tipo.toLowerCase() === e.toLowerCase())
-      setRooms(tempRooms)
-    }else{
-      setRooms(duplicateRooms)
-    }
+  function filterByDate(dates) {
+    //from date
+    console.log(dates[0].format("DD-MM-YYYY"));
+    setFromDate(dates[0].format("DD-MM-YYYY"));
+    //to date
+    console.log(dates[1].format("DD-MM-YYYY"));
+    setToDate(dates[1].format("DD-MM-YYYY"));
   }
 
   return (
     <div className="container">
       <div className="row mt-5 bs">
         <div className="col-md-5">
-          <RangePicker format='DD-MM-YYYY' onChange={filterByDate} />
+          <RangePicker allowClear={false} format='DD-MM-YYYY' onChange={filterByDate} />
         </div>
 
         <div className="col-md-5">
-          <input type="text" className="form-control" placeholder="search rooms"
-            value = {searchKey} onChange={(e) => {setSearchKey(e.target.value)}} onKeyUp={filterBySearch}
+          <input type="text" className="form-control" placeholder="Cerca stanze"
+            value={searchKey} onChange={(e) => { setSearchKey(e.target.value) }}
           />
         </div>
+
         <div className="col-md-2">
-          <select className="form-control" value={type} onChange={(e) => {filterByType(e.target.value)}}>
+          <select className="form-control" value={type} onChange={(e) => { setType(e.target.value)}}>
             <option value='Tutte'>Tutte</option>
-            <option value='Lusso'>Lusso</option>
-            <option value='Economico'>Economico</option>
+            <option value='Standard'>Standard</option>
+            <option value='Lussuosa'>Lussuosa</option>
+            <option value='Economica'>Economica</option>
           </select>
+        </div>
+        
+        <div className="mt-2">
+          <div className="col-md-12">
+            <Button className="btn btn-primary" style={{width: "100%"}} onClick={filterUnified}>Filtra</Button>
+          </div>
         </div>
       </div>
 
-      <div className="row justify-content-center mt-5">
+
+
+      <div className="row justify-content-center">
         {loading ? (
           <Loader />
         ) : (
           rooms.map((room) => {
-            return <div className="col-md-9 mt-3"> 
+            return <div className="col-md-12 mt-3">
               <Room room={room} fromDate={fromDate} toDate={toDate} />
             </div>
           })
