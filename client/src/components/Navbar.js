@@ -14,10 +14,11 @@ function Navbar() {
   };
 
   function logout() {
+    window.location.href = "/login";
     localStorage.removeItem("currentUser");
     //remove cookie named token
     handleDeleteCookie();
-    window.location.href = "/login";
+    
   }
   const location = useLocation();
 
@@ -73,7 +74,7 @@ function Navbar() {
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                       <li><a class="dropdown-item" href="/profile">Profilo</a></li>
                       {user.isAdmin ? (<li><a class="dropdown-item" href="/admin">Pannello Admin</a></li>):(null)}
-                      <li><a class="dropdown-item" onClick={logout} href="">Log Out</a></li>
+                      <li><button class="dropdown-item" onClick={logout}>Log Out</button></li>
 
                     </ul>
                   </div>

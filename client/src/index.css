@@ -76,3 +76,21 @@ input, select, .ant-picker{
 .allineatore .btn-link {
   margin-left: auto;
 }
+
+.video-background{
+  position: fixed;
+  z-index: -1;
+  width: 100%;
+  filter: brightness(70%);
+}
+
+.btn-landing{
+  background-color: white !important;
+  color: black !important;
+  box-shadow: none !important;
+  border: 0;
+  font-size: 20px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 20px;
+}

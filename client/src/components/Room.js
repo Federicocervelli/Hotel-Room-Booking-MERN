@@ -5,7 +5,7 @@ import Modal from "react-bootstrap/Modal";
 import Carousel from "react-bootstrap/Carousel";
 import { Link } from "react-router-dom";
 
-function Room({ room, fromDate, toDate}) {
+function Room({ room, fromDate, toDate, searchedFromDate, searchedToDate}) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -24,7 +24,7 @@ function Room({ room, fromDate, toDate}) {
           <div>{room.costo}€ al giorno</div>
           <div className="float-end float-bottom">
 
-            {(fromDate && toDate) &&(
+            {(fromDate && toDate && fromDate===searchedFromDate && toDate===searchedToDate) &&(
               <Link to={`/book/${room._id}/${fromDate}/${toDate}`}>
                 <button className="btn btn-primary me-2" >Prenota Ora</button>
               </Link>

@@ -74,7 +74,7 @@ export function MyBookings() {
     async function cancelBooking(bookingid, roomid) {
         try {
             setloading(true)
-            const result = await axios.post('/api/bookings/cancelbooking', { bookingid, roomid }).data
+            const result = await axios.post('/api/bookings/cancelbooking', { bookingid }).data
             setloading(false)
             Swal.fire('Congratulazioni', 'Prenotazione annullata con successo', 'success').then(result => {
                 window.location.reload()

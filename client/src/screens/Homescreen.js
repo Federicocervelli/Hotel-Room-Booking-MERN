@@ -5,6 +5,7 @@ import Loader from "../components/Loader";
 import Error from "../components/Error";
 import { Button, DatePicker, Space } from 'antd';
 import moment from 'moment'
+import { set } from "mongoose";
 
 
 const { RangePicker } = DatePicker;
@@ -16,6 +17,10 @@ function Homescreen() {
 
   const [fromDate, setFromDate] = useState()
   const [toDate, setToDate] = useState()
+
+  const [searchedFromDate, setSearchedFromDate] = useState()
+  const [searchedToDate, setSearchedToDate] = useState()
+
   const [duplicateRooms, setDuplicateRooms] = useState([])
 
   const [searchKey, setSearchKey] = useState('')
@@ -41,6 +46,8 @@ function Homescreen() {
 
 
   function filterUnified() {
+    setSearchedFromDate(fromDate)
+    setSearchedToDate(toDate)
     //first filter by search
     var tempRooms = duplicateRooms.filter(room => room.nome.toLowerCase().includes(searchKey.toLowerCase()))
 
@@ -138,7 +145,7 @@ function Homescreen() {
         ) : (
           rooms.map((room) => {
             return <div className="col-md-12 mt-3">
-              <Room room={room} fromDate={fromDate} toDate={toDate} />
+              <Room room={room} fromDate={fromDate} toDate={toDate} searchedFromDate={searchedFromDate} searchedToDate={searchedToDate}/>
             </div>
           })
         )}
