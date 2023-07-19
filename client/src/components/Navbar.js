@@ -71,7 +71,7 @@ function Navbar() {
                     >
                       <i class="fa fa-user me-2"></i> {user.nome}
                     </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
                       <li><a class="dropdown-item" href="/profile">Profilo</a></li>
                       {user.isAdmin ? (<li><a class="dropdown-item" href="/admin">Pannello Admin</a></li>):(null)}
                       <li><button class="dropdown-item" onClick={logout}>Log Out</button></li>
