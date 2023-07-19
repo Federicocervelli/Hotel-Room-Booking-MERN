@@ -4,6 +4,7 @@ const router = express.Router();
 import Room from '../models/room.js';
 import { verifyAdmin } from '../utils/verifyToken.js';
 
+// Ottiene tutte le stanze, tutti possono farlo
 router.get('/getallrooms', async (req, res, next) => {
     try {
         const rooms = await Room.find({});
@@ -14,6 +15,7 @@ router.get('/getallrooms', async (req, res, next) => {
     }
 });
 
+// Ottiene una stanza, tutti possono farlo
 router.post('/getroombyid', async (req, res) => {
 
     const roomid = req.body.roomid;
@@ -27,6 +29,7 @@ router.post('/getroombyid', async (req, res) => {
     }
 });
 
+// Aggiunge una stanza, solo se l'utente è admin
 router.post('/addroom', verifyAdmin, async (req, res) => {
     try{
         const newroom = new Room(req.body);
@@ -39,6 +42,7 @@ router.post('/addroom', verifyAdmin, async (req, res) => {
     
 });
 
+// Cancella una stanza, solo se l'utente è admin
 router.delete('/deleteroom/:id', verifyAdmin, async (req, res) => {
     try{
         const roomid = req.params.id;
@@ -51,6 +55,7 @@ router.delete('/deleteroom/:id', verifyAdmin, async (req, res) => {
     }
 });
 
+// Aggiorna una stanza, solo se l'utente è admin
 router.put('/updateroom/:id', verifyAdmin, async (req, res) => {
     try{
         const updatedRoom = await Room.findByIdAndUpdate(req.params.id, req.body, {new:true});

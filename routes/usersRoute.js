@@ -44,6 +44,7 @@ Router.post("/login2", async(req, res) => {
     }
 });*/
 
+// Prende tutti gli utenti, solo se l'utente è admin
 Router.get("/getallusers", verifyAdmin, async(req, res, next) => {
     try {
         const users = await User.find({})
@@ -53,7 +54,7 @@ Router.get("/getallusers", verifyAdmin, async(req, res, next) => {
     }
 });
 
-//Register a new user with a hashed password and create a token
+// Registra un utente con password criptata 
 Router.post("/register", async(req, res) => {
     try {
         const {nome, email, password} = req.body
@@ -86,7 +87,7 @@ Router.post("/register", async(req, res) => {
 
 });
 
-//Login a registered user
+// Login utente, restituisce un token JWT valido per 1 ora
 Router.post("/login", async(req, res) => {
     try {
 
@@ -116,12 +117,12 @@ Router.post("/login", async(req, res) => {
     }
 });
 
-//check authentication
+// Check autenticazione di test
 Router.get("/checkauthentication", verifyToken, (req, res, next)=>{
     res.send(req.user);
 })
 
-//make admin
+// Rende un utente admin (solo se l'agente è admin)
 Router.put("/makeadmin", verifyAdmin, async(req, res, next)=>{
     const id = req.body.id;
     try {

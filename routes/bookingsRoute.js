@@ -5,8 +5,10 @@ import Room from "../models/room.js";
 import moment from "moment";
 import { verifyAdmin, verifyToken } from "../utils/verifyToken.js";
 
+// Crea una nuova prenotazione, solo se l'utente è loggato
 router.post("/bookroom", verifyToken, async (req, res) => {
-  const { room, userid, fromdate, todate, totalamount, totaldays } = req.body;
+  const { room, fromdate, todate, totalamount, totaldays } = req.body;
+  const userid = req.user.id;
 
   try {
     const newBooking = new Booking({
@@ -39,6 +41,7 @@ router.post("/bookroom", verifyToken, async (req, res) => {
   }
 });
 
+// Ottiene tutte le prenotazioni dell'utente, solo se l'utente è admin o è l'utente stesso
 router.post("/getbookingsbyuserid", verifyToken, async (req, res) => {
   const userid = req.body.userid;
   if (req.user.id !== userid && !req.user.isAdmin) {
@@ -54,6 +57,7 @@ router.post("/getbookingsbyuserid", verifyToken, async (req, res) => {
   }
 });
 
+// Cancella una prenotazione, solo se l'utente è admin o è l'utente stesso
 router.post("/cancelbooking", verifyToken, async (req, res) => {
   const bookingid = req.body.bookingid;
   const bookingtodelete = await Booking.findOne({ _id: bookingid });
@@ -88,6 +92,7 @@ router.post("/cancelbooking", verifyToken, async (req, res) => {
   }
 });
 
+// Ottiene tutte le prenotazioni, solo se l'utente è admin
 router.get("/getallbookings", verifyAdmin, async (req, res) => {
   try {
     const bookings = await Booking.find({});
